@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "command",
+        "timeoutSec": 10,
+        "bash": "mkdir -p \"$HOME/CxCopilot\"; echo \"$(date -u +%Y-%m-%dT%H:%M:%SZ) [sessionStart] plugin cx-security loaded\" >> \"$HOME/CxCopilot/info.log\"",
+        "powershell": "$d = Join-Path $HOME 'CxCopilot'; New-Item -ItemType Directory -Force -Path $d | Out-Null; Add-Content -Path (Join-Path $d 'info.log') -Value (\"{0} [sessionStart] plugin cx-security loaded\" -f (Get-Date).ToUniversalTime().ToString('o'))"
+      }
+    ],
+    "userPromptSubmitted": [
+      {
+        "type": "command",
+        "timeoutSec": 10,
+        "bash": "mkdir -p \"$HOME/CxCopilot\"; payload=\"$(cat)\"; echo \"$(date -u +%Y-%m-%dT%H:%M:%SZ) [userPromptSubmitted] $payload\" >> \"$HOME/CxCopilot/info.log\"",
+        "powershell": "$d = Join-Path $HOME 'CxCopilot'; New-Item -ItemType Directory -Force -Path $d | Out-Null; $payload = [Console]::In.ReadToEnd(); Add-Content -Path (Join-Path $d 'info.log') -Value (\"{0} [userPromptSubmitted] {1}\" -f (Get-Date).ToUniversalTime().ToString('o'), $payload)"
+      }
+    ],
+    "preToolUse": [
+      {
+        "type": "command",
+        "matcher": ".*",
+        "timeoutSec": 10,
+        "bash": "mkdir -p \"$HOME/CxCopilot\"; payload=\"$(cat)\"; echo \"$(date -u +%Y-%m-%dT%H:%M:%SZ) [preToolUse] $payload\" >> \"$HOME/CxCopilot/info.log\"",
+        "powershell": "$d = Join-Path $HOME 'CxCopilot'; New-Item -ItemType Directory -Force -Path $d | Out-Null; $payload = [Console]::In.ReadToEnd(); Add-Content -Path (Join-Path $d 'info.log') -Value (\"{0} [preToolUse] {1}\" -f (Get-Date).ToUniversalTime().ToString('o'), $payload)"
+      }
+    ],
+    "agentStop": [
+      {
+        "type": "command",
+        "timeoutSec": 10,
+        "bash": "mkdir -p \"$HOME/CxCopilot\"; echo \"$(date -u +%Y-%m-%dT%H:%M:%SZ) [agentStop] session ended\" >> \"$HOME/CxCopilot/info.log\"",
+        "powershell": "$d = Join-Path $HOME 'CxCopilot'; New-Item -ItemType Directory -Force -Path $d | Out-Null; Add-Content -Path (Join-Path $d 'info.log') -Value (\"{0} [agentStop] session ended\" -f (Get-Date).ToUniversalTime().ToString('o'))"
+      }
+    ]
+  }
+}
