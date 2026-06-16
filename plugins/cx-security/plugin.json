@@ -9,5 +9,6 @@
   "keywords": ["security", "checkmarx", "cxone", "sast"],
   "category": "development",
   "skills": ["skills/"],
-  "hooks": "hooks.json"
+  "hooks": "hooks.json",
+  "mcpServers": ".mcp.json"
 }

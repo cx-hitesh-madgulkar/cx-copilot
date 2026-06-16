@@ -20,6 +20,7 @@ Coplitot-Marketplace/
 │   └── cx-security/
 │       ├── plugin.json               # Plugin manifest (at plugin root)
 │       ├── hooks.json                # Logging-only test hooks
+│       ├── .mcp.json                 # Checkmarx MCP server (HTTP) — placeholders only
 │       └── skills/
 │           ├── cx-cli-setup/
 │           │   └── SKILL.md          # Copied verbatim from cxone-scanners
@@ -94,13 +95,52 @@ cross-platform: `bash` runs on Linux/macOS, `powershell` runs on Windows.
    You should see a `sessionStart` line, a `userPromptSubmitted` line, one `preToolUse` line per
    tool call (with the file name inside the payload), and an `agentStop` line when the session ends.
 
+## Checkmarx MCP server (`.mcp.json`)
+
+[.mcp.json](plugins/cx-security/.mcp.json) declares the Checkmarx MCP server so the
+`cx-security-asca` skill can reach the `mcp__Checkmarx__codeRemediation` tool. It uses Copilot's
+remote **HTTP** transport:
+
+```json
+{
+  "mcpServers": {
+    "Checkmarx": {
+      "type": "http",
+      "url": "<Cx_MCP_URL>",
+      "headers": {
+        "cx-origin": "VsCode",
+        "Authorization": "<AUTH_TOKEN>"
+      },
+      "tools": ["*"]
+    }
+  }
+}
+```
+
+The server is named **`Checkmarx`** on purpose — that name produces the `mcp__Checkmarx__*` tool
+prefix the skill expects. `"tools": ["*"]` exposes all of the server's tools.
+
+> ⚠️ **Do not commit a real `Authorization` token.** Copilot CLI does **not** support environment
+> variable expansion in `.mcp.json`, and this file is distributed with the plugin — a real token
+> pushed to your repo is a leaked credential. Keep the committed file as placeholders.
+
+**Two ways to supply real credentials:**
+
+- **Recommended — user-scope config (secret never enters the repo):** add the same server block to
+  your machine's `~/.copilot/mcp-config.json` with the real `url` and token. The skill's tools
+  become available in every session and nothing sensitive is committed. In that case the plugin's
+  `.mcp.json` stays as documentation/placeholders.
+- **Local-only edit:** fill `<Cx_MCP_URL>` and `<AUTH_TOKEN>` in the plugin's `.mcp.json` for
+  testing, but **never push** that version (e.g. keep it on an untracked local copy). `Authorization`
+  is usually `Bearer <token>`. Adjust `cx-origin` if your tenant expects a different origin value.
+
 ## Next steps (after the scaffold is confirmed working)
 
 - Replace the logging commands in [hooks.json](plugins/cx-security/hooks.json) with the real
   Checkmarx policy behavior (the Copilot equivalent of `cx hooks ...`), and add a
   CLI-presence pre-check.
-- Add `.mcp.json` / a `mcpServers` entry to `plugin.json` so the `cx-security-asca` skill can
-  reach the Checkmarx `codeRemediation` MCP tool.
+- Verify the MCP connection: with real credentials configured, run the `cx-security-asca` skill and
+  confirm `mcp__Checkmarx__codeRemediation` is reachable.
 - Tighten the `preToolUse` matcher from `.*` to the specific Copilot tool names once their
   exact identifiers are confirmed.
 
