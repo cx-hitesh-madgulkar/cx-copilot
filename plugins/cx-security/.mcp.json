@@ -2,7 +2,7 @@
   "mcpServers": {
     "Checkmarx": {
       "type": "http",
-      "url": "<Cx_MCP_URL>",
+      "url": "https://eu.ast.checkmarx.net/api/security-mcp/mcp",
       "headers": {
         "cx-origin": "github-copilot-cli",
         "Authorization": "<AUTH_TOKEN>"
