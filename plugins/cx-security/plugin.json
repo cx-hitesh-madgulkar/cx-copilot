@@ -1,6 +1,6 @@
 {
   "name": "cx-security",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Checkmarx CxOne security scanning plugin for GitHub Copilot CLI",
   "author": {
     "name": "Checkmarx"
