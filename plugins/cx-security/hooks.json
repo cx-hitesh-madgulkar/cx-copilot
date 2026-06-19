@@ -27,17 +27,17 @@
       },
       {
         "type": "command",
-        "matcher": "write",
+        "matcher": "create",
         "timeoutSec": 60,
         "bash": "cx hooks claude-pre-file-write",
-        "powershell": "cx hooks claude-pre-file-write"
+        "powershell": "& '\\main.exe' hooks copilot-cli-pre-file-write"
       },
       {
         "type": "command",
         "matcher": "edit",
         "timeoutSec": 60,
         "bash": "cx hooks claude-pre-file-write",
-        "powershell": "cx hooks claude-pre-file-write"
+        "powershell": "& '\\main.exe' hooks copilot-cli-pre-file-write"
       }
     ],
     "agentStop": [
